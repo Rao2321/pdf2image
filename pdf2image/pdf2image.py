@@ -26,12 +26,13 @@ from .exceptions import (
 
 TRANSPARENT_FILE_TYPES = ['png', 'tiff']
 
-def convert_from_path(pdf_path, dpi=200, output_folder=None, first_page=None, last_page=None, fmt='ppm', thread_count=1, userpw=None, use_cropbox=False, strict=False, transparent=False, output_file=str(uuid.uuid4())):
+def convert_from_path(pdf_path, dpi=200, scale=1000, output_folder=None, first_page=None, last_page=None, fmt='ppm', thread_count=1, userpw=None, use_cropbox=False, strict=False, transparent=False, output_file=str(uuid.uuid4())):
     """
         Description: Convert PDF to Image will throw whenever one of the condition is reached
         Parameters:
             pdf_path -> Path to the PDF that you want to convert
             dpi -> Image quality in DPI (default 200)
+            scale -> Image size scaling (default 1000)
             output_folder -> Write the resulting images to a folder (instead of directly in memory)
             first_page -> First page to process
             last_page -> Last page to process before stopping
@@ -79,7 +80,7 @@ def convert_from_path(pdf_path, dpi=200, output_folder=None, first_page=None, la
         # Get the number of pages the thread will be processing
         thread_page_count = page_count // thread_count + int(reminder > 0)
         # Build the command accordingly
-        args = _build_command(['-r', str(dpi), '-scale-to', '1000', pdf_path], output_folder, current_page, current_page + thread_page_count - 1, parsed_fmt, thread_output_file, userpw, use_cropbox, transparent)
+        args = _build_command(['-r', str(dpi), '-scale-to', str(scale), pdf_path], output_folder, current_page, current_page + thread_page_count - 1, parsed_fmt, thread_output_file, userpw, use_cropbox, transparent)
 
         if use_pdfcairo:
             args = ['pdftocairo'] + args
